@@ -1,6 +1,7 @@
 package com.example.liquibase_users1.models.entity;
 
 import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Album {
 
     public Album() {
     }
+
     public void createNewAlbum() {
         date_creation = LocalDate.now();
         photos = new ArrayList<>();
@@ -47,12 +49,5 @@ public class Album {
             photos.remove(photo);
         }
     }
-//    public void addAlbum(Photo photo) {
-//        if (!photos.containsValue(photo)) {photos.put(photo.getId(), photo);}
-//    }
-//
-//    public void deleteAlbum(Photo photo) {
-//        if (photos.containsKey(photo)) {photos.remove(photo);}
-//    }
 
 }

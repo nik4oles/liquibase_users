@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -24,12 +25,16 @@ public class Group {
     private User owner;
     @Column
     @OneToMany
+    @JoinTable(name = "groups_subscribers",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+    )
     private List<User> subscribers;
     @Column
     @OneToMany
     @JoinTable(name = "groups_albums",
-            joinColumns = @JoinColumn(name = "groups_id"),
-            inverseJoinColumns = @JoinColumn(name = "albums_id")
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id")
     )
     private List<Album> albums;
     @OneToOne
@@ -57,11 +62,15 @@ public class Group {
     }
 
     public void addAlbum(Album album) {
-        if (!albums.contains(album)) {albums.add(album);}
+        if (!albums.contains(album)) {
+            albums.add(album);
+        }
     }
 
     public void deleteAlbum(Album album) {
-        if (albums.contains(album)) {albums.remove(album);}
+        if (albums.contains(album)) {
+            albums.remove(album);
+        }
     }
 
 }

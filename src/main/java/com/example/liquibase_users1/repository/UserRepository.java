@@ -79,6 +79,4 @@ public interface UserRepository extends CrudRepository<User, Long> {
                                              @Param("gender") Gender gender,
                                              Pageable pageable);
 
-
-    void deleteByNickname(String nickname);
 }

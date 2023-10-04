@@ -26,21 +26,16 @@ import java.util.Set;
 
 public class User {
     @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String name;
     private String lastname;
-    @Column//(nullable = false)
-    // @UniqueElements
     private String nickname;
     private String email;
-   // @Column(nullable = false)
     private String password;
     private String shortStoryAboutUser;
-   // @Column(nullable = false)
-    private short number;
+    private String number;
     private LocalDate dateOfBirth;
     private LocalDate reg_date;
     @Enumerated(EnumType.STRING)
@@ -51,20 +46,20 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_subscribers",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscribers_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
     )
     private List<User> subscribers;
     @OneToMany
     @JoinTable(name = "users_albums",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "albums_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id")
     )
     private List<Album> albums;
     @ManyToMany
     @JoinTable(name = "users_groups",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "groups_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
     )
     private List<Group> groups;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -74,16 +69,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @OneToOne
-    @JoinColumn(name = "photo_id")
+    @JoinColumn(name = "profile_photo_id")
     private Photo profilePicture;
     @OneToOne
-    @JoinColumn(name = "albums_id")
+    @JoinColumn(name = "main_album_id")
     private Album mainAlbum;
     @Embedded
     private Location location;
     private boolean isPrivate;
     private boolean enabled;
-
+    @Enumerated(EnumType.STRING)
     private Popularity popularity;
 
     public User() {

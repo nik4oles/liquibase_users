@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  postgres-db:
+    image: postgres:14
+    restart: always
+    ports:
+      - "5001:5432"
+    environment:
+      - POSTGRES_USER=test-user
+      - POSTGRES_PASSWORD=test-pass
+      - POSTGRES_DB=test-db
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:6.9
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@sdmin.org
+      - PGADMIN_DEFAULT_PASSWORD=pgpass
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+  my-web-app-demo:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/test-db
+    depends_on:
+      - postgres-db
+
+
+
+
+

@@ -15,5 +15,6 @@ public interface PhotoRepository extends CrudRepository<Photo, Long> {
     Photo getPhotoById(long id);
     @Query("select p.likes from Photo p ")
     List<Like> getLikesPhotoById(long id);
+    List<Photo> getPhotoByAlbum_Id(long id);
 
 }
