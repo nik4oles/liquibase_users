@@ -1,6 +1,5 @@
 package com.example.liquibase_users1.models.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +11,15 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "photos")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "photoWithAlbumGraph",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "album"),
+                        @NamedAttributeNode(value = "likes")
+                }
+        )
+})
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +34,7 @@ public class Photo {
             joinColumns = @JoinColumn(name = "photo_id"),
             inverseJoinColumns = @JoinColumn(name = "like_id")
     )
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
     @ManyToMany
     @JoinTable(name = "photos_tag_users",
             joinColumns = @JoinColumn(name = "user_id"),

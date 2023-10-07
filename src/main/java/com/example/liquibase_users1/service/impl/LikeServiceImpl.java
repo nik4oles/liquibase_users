@@ -5,9 +5,11 @@ import com.example.liquibase_users1.models.dto.request.LikeRequestDTO;
 import com.example.liquibase_users1.models.dto.response.PhotoResponseDTO;
 import com.example.liquibase_users1.models.entity.Like;
 import com.example.liquibase_users1.models.entity.Photo;
+import com.example.liquibase_users1.models.enums.Emotion;
 import com.example.liquibase_users1.repository.LikeRepository;
 import com.example.liquibase_users1.repository.PhotoRepository;
 import com.example.liquibase_users1.service.LikeService;
+import com.example.liquibase_users1.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,13 +21,17 @@ import java.util.List;
 public class LikeServiceImpl implements LikeService {
     private final LikeRepository likeRepository;
     private final PhotoRepository photoRepository;
+    private final UserService userService;
     private final PhotoMapper photoMapper;
 
     /** Сохренения лайка */
 
     @Override
     @Transactional
-    public PhotoResponseDTO addLikePhoto(Like like, long photoId) {
+    public PhotoResponseDTO addLikePhoto(long userId, long photoId) {
+        Like like = new Like();
+        like.setUser(userService.getUser(userId));
+        like.setEmotion(Emotion.Like);
         likeRepository.save(like);
         Photo photo = photoRepository.getPhotoById(photoId);
         photo.getLikes().add(like);

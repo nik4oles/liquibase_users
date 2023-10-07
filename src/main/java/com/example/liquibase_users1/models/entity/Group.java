@@ -3,6 +3,7 @@ package com.example.liquibase_users1.models.entity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -10,6 +11,14 @@ import jakarta.persistence.*;
 @Entity
 @Data
 @Table(name = "groups")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "groupGraph",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "subscribers")
+                }
+        )
+})
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +45,7 @@ public class Group {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "album_id")
     )
-    private List<Album> albums;
+    private List<Album> albums = new ArrayList<>();
     @OneToOne
     @JoinColumn(name = "photo_id")
     private Photo profilePicture;

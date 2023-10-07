@@ -9,9 +9,15 @@ import java.util.Objects;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Data
 @Table(name = "albums")
+@NamedEntityGraph(name = "albumWithPhotoGraph",
+        attributeNodes = {
+                        @NamedAttributeNode(value = "photos")
+        }
+)
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +50,23 @@ public class Album {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Album{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date_creation=" + date_creation +
+                ", isPrivate=" + isPrivate +
+                ", photos=" + photos +
+                '}';
+    }
+
     public void deleteAlbum(Photo photo) {
         if (photos.contains(photo)) {
             photos.remove(photo);
         }
     }
+
 
 }

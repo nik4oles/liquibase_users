@@ -15,7 +15,6 @@ import com.example.liquibase_users1.repository.GroupRepository;
 import com.example.liquibase_users1.repository.UserRepository;
 import com.example.liquibase_users1.service.GroupService;
 import com.example.liquibase_users1.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -49,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
     }
     @Override
     public GroupResponseDTO getGroupResponseDTO(long id) {
-        return groupMapper.toDto(getGroup(id));
+        return groupMapper.toDto(groupRepository.getGroupById(id));
     }
 
 
@@ -57,7 +56,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public GroupResponseDTO updateGroup(GroupRequestDTO group, long id) {
 
-        Group groupBD = getGroup(id);
+        Group groupBD = groupRepository.getGroupById(id);
 
         groupBD.setName(group.getName());
         groupBD.setDescription(group.getDescription());
@@ -93,30 +92,32 @@ public class GroupServiceImpl implements GroupService {
 
     /** Подписки */
     @Override
-    @Transactional
-    public void subscribe(long id, long subscriberId) {
-        Group group = getGroup(id);
+    public String subscribe(long id, long subscriberId) {
+        Group group = groupRepository.getGroupById(id);
         User subscriber = userService.getUser(subscriberId);
 
-        if (group.getSubscribers().contains(subscriber)) {   //getSib Trans
-            return;
+        for (User user: group.getSubscribers()) {
+            if(user.getId() == subscriberId) return "Вы уже подписаны ";
         }
 
         group.getSubscribers().add(subscriber);
         groupRepository.save(group);
+        return "Вы подписались на " + group.getName();
     }
     @Override
-    public void unsubscribe(long id, long subscriberId) {
-        Group group = getGroup(id);
+    public String unsubscribe(long id, long subscriberId) {
+        Group group = groupRepository.getGroupById(id);
         User subscriber = userService.getUser(subscriberId);
 
-
-        if (!group.getSubscribers().contains(subscriber)) {
-            return;
+        for (User user: group.getSubscribers()) {
+            if(user.getId() == subscriberId) {
+                return "Вы уже отписались от " + group.getName();
+            }
         }
 
         group.getSubscribers().remove(subscriber);
         groupRepository.save(group);
+        return "Вы отписались от" + group.getName();
     }
 
     /** Получение списков пользователей и альбомов */

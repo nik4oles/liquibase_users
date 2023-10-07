@@ -1,10 +1,6 @@
 package com.example.liquibase_users1.config;
 
 import com.example.liquibase_users1.models.dto.request.*;
-import com.example.liquibase_users1.models.dto.response.AlbumResponseDTO;
-import com.example.liquibase_users1.models.entity.*;
-import com.example.liquibase_users1.models.enums.Emotion;
-import com.example.liquibase_users1.repository.UserRepository;
 import com.example.liquibase_users1.service.AlbumService;
 import com.example.liquibase_users1.service.GroupService;
 import com.example.liquibase_users1.service.LikeService;
@@ -20,13 +16,12 @@ import java.net.URI;
 
 
 @Component
-@ConditionalOnExpression("${run.init:true}")
+@ConditionalOnExpression("${run.init:false}")
 @RequiredArgsConstructor
 public class TestDataInitializer {
 
     private final UserService userService;
     private final AlbumService albumService;
-    private final UserRepository userRepository;
     private final GroupService groupService;
     private final LikeService likeService;
 
@@ -109,10 +104,7 @@ public class TestDataInitializer {
     public void initLikes() {
 
         for(int i = 1; i < 10; i++) {
-            Like like = new Like();
-            like.setEmotion(Emotion.values()[i%2]);
-            like.setUser(userService.getUser(i%10 + 1));
-            likeService.addLikePhoto(like, 1);
+            likeService.addLikePhoto(i, 1);
         }
 
     }

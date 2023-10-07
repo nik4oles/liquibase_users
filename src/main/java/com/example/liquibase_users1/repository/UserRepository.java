@@ -1,6 +1,5 @@
 package com.example.liquibase_users1.repository;
 
-
 import com.example.liquibase_users1.models.entity.*;
 import com.example.liquibase_users1.models.enums.Gender;
 import org.springframework.data.domain.Page;

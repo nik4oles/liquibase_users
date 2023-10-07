@@ -1,12 +1,10 @@
 package com.example.liquibase_users1.models.entity;
 
-
 import com.example.liquibase_users1.models.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
-
 
 import java.util.Objects;
 

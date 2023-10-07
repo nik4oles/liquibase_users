@@ -1,8 +1,8 @@
 package com.example.liquibase_users1.repository;
 
-import com.example.liquibase_users1.models.dto.response.GroupResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,11 +20,17 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     @Query("select g.subscribers from Group g")
     List<User> getSubscribersByGroupId(Long userId);
 
+    @EntityGraph(value = "groupGraph", type = EntityGraph.EntityGraphType.LOAD)
+    Group getGroupById(long id);
+
+    @EntityGraph(value = "groupGraph")
     @Query("select g.albums from Group g")
     List<Album> getAlbumByGroupId(Long userId);
+    @EntityGraph(value = "groupGraph")
     @Query("select g from Group g where g.name = :name and g.description = :description ")
     Page<Group> getAllGroupsByParams(@Param("name") String name,
                                      @Param("description") String description, Pageable pageable);
+    @EntityGraph(value = "groupGraph")
     @Query("select g from User u join u.groups g where u.id = :id and g.name = :name and g.description = :description ")
     Page<Group> getGroupsByUserIdAndParams(@Param("id") Long id,
                                            @Param("name") String name,

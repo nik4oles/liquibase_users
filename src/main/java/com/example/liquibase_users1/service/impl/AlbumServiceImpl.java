@@ -23,12 +23,13 @@ import com.example.liquibase_users1.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@Component
+
+@Service
 @RequiredArgsConstructor
 public class AlbumServiceImpl implements AlbumService {
     private final PhotoRepository photoRepository;
@@ -42,20 +43,21 @@ public class AlbumServiceImpl implements AlbumService {
     private final GroupMapper groupMapper;
     private final PhotoMapper photoMapper;
 
-
+    @Override
     public Album getAlbum(long albumId) {
         return albumRepository.findById(albumId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
+    @Transactional
     public AlbumResponseDTO getAlbumResponseDTO(long id) {
-        return albumMapper.toDto(getAlbum(id));
+        return albumMapper.toDto(albumRepository.getAlbumById(id));
     }
 
     @Override
+    @Transactional
     public AlbumResponseDTO updateAlbum(long albumId, AlbumRequestDTO album) {
-        //TODO сделать дто для ответа и изменить альбом на дто
-        Album albumBD = getAlbum(albumId);
+        Album albumBD = albumRepository.getAlbumById(albumId);
         albumBD.setName(album.getName());
         albumBD.setPrivate(album.isPrivate());
         albumBD.setDescription(album.getDescription());
@@ -63,12 +65,12 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public String deleteAlbum(long albumId) {  //Удалиться ли у юзера альбом???? Без доставания его и удаления у него. Внизу есть метод с доставанием
+    public String deleteAlbum(long albumId) {
         Album album = getAlbum(albumId);
         if (album.getName() == "main") {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        albumRepository.save(album);
+        albumRepository.delete(album);
         return "Альбом удален";
     }
 
@@ -79,8 +81,8 @@ public class AlbumServiceImpl implements AlbumService {
         photo.createNewPhoto();
         Album album = getAlbum(albumId);
         photo.setAlbum(album);
-        album.getPhotos().add(photo);
-        albumRepository.save(album); //TODO если убрать одно из них?
+        //album.getPhotos().add(photo);
+        //albumRepository.save(album);
         photoRepository.save(photo);
         return getAlbumResponseDTO(albumId);
     }
@@ -89,19 +91,13 @@ public class AlbumServiceImpl implements AlbumService {
     public Photo getPhoto(long photoId) {
         return photoRepository.findById(photoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
     @Override
+    @Transactional
     public PhotoResponseDTO getPhotoResponseDTO(long photoId) {
-        return photoMapper.toDto(getPhoto(photoId));
+        return photoMapper.toDto(photoRepository.getPhotoById(photoId));
     }
-    @Override
-    public AlbumResponseDTO deletePhotoUser(long albumId, long photoId) {
-        Album album = getAlbum(albumId);
-        Photo photo = photoRepository.getPhotoById(photoId);
-        album.getPhotos().remove(photo);
-        albumRepository.save(album);
-        photoRepository.deleteById(photoId);
-        return getAlbumResponseDTO(albumId);
-    }
+
 
     @Override
     public UserResponseDTO createProfilePictureUser(long id, long photoId) {
@@ -114,19 +110,6 @@ public class AlbumServiceImpl implements AlbumService {
         return userService.getUserResponseDTO(id);
     }
 
-    @Override
-    public UserResponseDTO deleteAlbumUser(long id, Long albumId) {
-        Album album = userRepository.getAlbumByUserAndAlbumId(id, albumId);
-        if (album.getName() == "main") {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        User user = userRepository.findById(id).get();
-        user.getAlbums().remove(album);
-
-        albumRepository.save(album);
-        userRepository.save(user);
-        return userService.getUserResponseDTO(id);
-    }
 
     @Override
     @Transactional
@@ -147,19 +130,6 @@ public class AlbumServiceImpl implements AlbumService {
         Photo photo = photoRepository.getPhotoById(photoId);
         group.setProfilePicture(photo);
 
-        return groupMapper.toDto(groupRepository.save(group));
-    }
-
-    @Override
-    public GroupResponseDTO deleteAlbumGroup(long id, Long albumId) {
-        Album album = groupRepository.getAlbumByGroupAndAlbumId(id, albumId);
-        if (album.getName() == "main") {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        Group group = groupRepository.findById(id).get();
-        group.getAlbums().remove(album);
-
-        albumRepository.save(album);
         return groupMapper.toDto(groupRepository.save(group));
     }
 
@@ -186,5 +156,3 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
 }
-
-

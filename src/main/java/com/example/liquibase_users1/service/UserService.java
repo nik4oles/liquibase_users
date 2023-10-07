@@ -7,8 +7,6 @@ import com.example.liquibase_users1.models.dto.response.AlbumResponseDTO;
 import com.example.liquibase_users1.models.dto.response.GroupResponseDTO;
 import com.example.liquibase_users1.models.dto.response.UserResponseDTO;
 import com.example.liquibase_users1.models.entity.User;
-import com.example.liquibase_users1.models.enums.Status;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 

@@ -4,7 +4,6 @@ import com.example.liquibase_users1.models.enums.Emotion;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 @Entity
 @Data
 @Table(name = "likes")

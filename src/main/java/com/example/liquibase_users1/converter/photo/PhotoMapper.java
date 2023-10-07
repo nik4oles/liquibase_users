@@ -2,7 +2,6 @@ package com.example.liquibase_users1.converter.photo;
 
 import com.example.liquibase_users1.converter.DtoMapper;
 import com.example.liquibase_users1.converter.EntityMapper;
-import com.example.liquibase_users1.converter.config.ConfigMapper;
 import com.example.liquibase_users1.models.dto.request.PhotoRequestDTO;
 import com.example.liquibase_users1.models.dto.response.PhotoResponseDTO;
 import com.example.liquibase_users1.models.entity.Photo;

@@ -1,7 +1,6 @@
 package com.example.liquibase_users1.models.dto.response;
 
 import com.example.liquibase_users1.models.entity.Photo;
-import com.example.liquibase_users1.models.entity.User;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ public class GroupResponseDTO {
     private String name;
     private String description;
     private LocalDate reg_date;
-    private User owner;
+    private UserResponseDTO owner;
     private int subscribersCount;
     private Photo profilePicture;
     private String shortStoryAboutGroup;

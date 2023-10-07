@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Data
 public class UserResponseDTO {
     private long id;
+    private PhotoResponseDTO profilePicture;
     private String name;
     private String lastname;
     private String nickname;

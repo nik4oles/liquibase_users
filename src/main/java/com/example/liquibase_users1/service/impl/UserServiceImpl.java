@@ -11,10 +11,7 @@ import com.example.liquibase_users1.models.dto.request.UserRequestDTO;
 import com.example.liquibase_users1.models.dto.response.AlbumResponseDTO;
 import com.example.liquibase_users1.models.dto.response.GroupResponseDTO;
 import com.example.liquibase_users1.models.dto.response.UserResponseDTO;
-import com.example.liquibase_users1.models.entity.Album;
-import com.example.liquibase_users1.models.entity.Location;
-import com.example.liquibase_users1.models.entity.Role;
-import com.example.liquibase_users1.models.entity.User;
+import com.example.liquibase_users1.models.entity.*;
 import com.example.liquibase_users1.models.enums.Gender;
 import com.example.liquibase_users1.models.enums.Status;
 import com.example.liquibase_users1.repository.AlbumRepository;
@@ -46,6 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUser(UserRegistrationRequestDTO userDTO) {
+        User userFromBD = userRepository.getUserByNickname(userDTO.getNickname());
+        if(userFromBD != null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         User user = userRegistrationMapper.toEntity(userDTO);
 
         user.createNewUser();
@@ -70,6 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO getUserResponseDTOByNickname(String nickname) {
         User user = userRepository.getUserByNickname(nickname);
+
         if( user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return userMapper.toDto(user);
     }
@@ -163,15 +163,15 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public String unsubscribe(long id, long subscriberId) {
-        User user = getUser(id);
+        User user = userRepository.getUserById(id);
         User subscriber = getUser(subscriberId);
 
-
         if (!user.getSubscribers().contains(subscriber)) {
-            throw new RuntimeException(String.format("Пользователь с id = %s не подписан на пользователя с id =%s", id, subscriberId));
+            return String.format("Пользователь с id = %s не подписан на пользователя с id =%s", id, subscriberId);
         }
 
         user.getSubscribers().remove(subscriber);
+        System.out.println(user.getSubscribers().size());
         userRepository.save(user);
         return "Успешно";
     }

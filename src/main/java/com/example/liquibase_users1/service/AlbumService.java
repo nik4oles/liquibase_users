@@ -6,13 +6,15 @@ import com.example.liquibase_users1.models.dto.response.AlbumResponseDTO;
 import com.example.liquibase_users1.models.dto.response.GroupResponseDTO;
 import com.example.liquibase_users1.models.dto.response.PhotoResponseDTO;
 import com.example.liquibase_users1.models.dto.response.UserResponseDTO;
+import com.example.liquibase_users1.models.entity.Album;
 import com.example.liquibase_users1.models.entity.Photo;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 
 public interface AlbumService {
 
+
+    Album getAlbum(long albumId);
 
     AlbumResponseDTO getAlbumResponseDTO(long id);
 
@@ -26,17 +28,11 @@ public interface AlbumService {
 
     PhotoResponseDTO getPhotoResponseDTO(long photoId);
 
-    AlbumResponseDTO deletePhotoUser(long albumId, long photoId);
-
     UserResponseDTO createProfilePictureUser(long id, long photoId);
-
-    UserResponseDTO deleteAlbumUser(long id, Long albumId);
 
     AlbumResponseDTO createAlbumUser(long id, AlbumRequestDTO albumDTO);
 
     GroupResponseDTO createProfilePictureGroup(long id, long photoId);
-
-    GroupResponseDTO deleteAlbumGroup(long id, Long albumId);
 
     AlbumResponseDTO createAlbumGroup(long id, AlbumRequestDTO albumDTO);
 

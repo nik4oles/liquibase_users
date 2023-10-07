@@ -6,7 +6,6 @@ import com.example.liquibase_users1.models.dto.response.AlbumResponseDTO;
 import com.example.liquibase_users1.models.dto.response.GroupResponseDTO;
 import com.example.liquibase_users1.models.dto.response.UserResponseDTO;
 import com.example.liquibase_users1.models.entity.Group;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -26,10 +25,9 @@ public interface GroupService {
 
     String deleteGroup(long id);
 
-    @Transactional
-    void subscribe(long id, long subscriberId);
+    String subscribe(long id, long subscriberId);
 
-    void unsubscribe(long id, long subscriberId);
+    String unsubscribe(long id, long subscriberId);
 
     List<UserResponseDTO> getSubscribersList(Long userId);
 
